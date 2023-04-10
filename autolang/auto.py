@@ -1,7 +1,7 @@
 from collections import deque
 from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, Field
-from langchain.agents import Tool 
+from langchain.agents import Tool
 from langchain.llms.base import BaseLLM
 from langchain.vectorstores import VectorStore
 
@@ -11,8 +11,8 @@ from .reviewer import ReviewingChain
 from .learner import LearningChain
 from .printer import print_objective, print_next_task, print_task_list, print_task_result, print_end
 
-class AutoAgent(BaseModel):
 
+class AutoAgent(BaseModel):
     planning_chain: PlanningChain = Field(...)
     reviewing_chain: ReviewingChain = Field(...)
     execution_agent: ExecutionAgent = Field(...)
@@ -27,12 +27,12 @@ class AutoAgent(BaseModel):
 
     @classmethod
     def from_llm_and_objectives(
-        cls,
-        llm: BaseLLM,
-        objective: str,
-        tools: List[Tool],
-        vectorstore: VectorStore,
-        verbose: bool = False,
+            cls,
+            llm: BaseLLM,
+            objective: str,
+            tools: List[Tool],
+            vectorstore: VectorStore,
+            verbose: bool = False,
     ) -> "AutoAgent":
         planning_chain = PlanningChain.from_llm(llm, objective, tools=tools, verbose=verbose)
         reviewing_chain = ReviewingChain.from_llm(llm, objective, verbose=verbose)
@@ -41,7 +41,7 @@ class AutoAgent(BaseModel):
         return cls(
             objective=objective,
             planning_chain=planning_chain,
-            reviewing_chain = reviewing_chain,
+            reviewing_chain=reviewing_chain,
             execution_agent=execution_agent,
             learning_chain=learning_chain,
             vectorstore=vectorstore,
@@ -80,10 +80,10 @@ class AutoAgent(BaseModel):
             #     ids=[f"result_{task['task_id']}"],
             # )
             reviewed_tasks = self.reviewing_chain.review_tasks(
-                    this_task_id=len(self.complete_list),
-                    completed_tasks=list(self.complete_list), 
-                    pending_tasks=list(self.pending_list), 
-                    context=self.memory)
+                this_task_id=len(self.complete_list),
+                completed_tasks=list(self.complete_list),
+                pending_tasks=list(self.pending_list),
+                context=self.memory)
             self.pending_list = deque(reviewed_tasks)
 
         final_answer = self.execution_agent.execute_task(self.objective, "Provide the final answer")

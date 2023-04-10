@@ -13,6 +13,7 @@ from langchain.tools.base import BaseTool
 
 from .prompt import FORMAT_INSTRUCTIONS, PREFIX, SUFFIX
 
+
 class AutonomousAgent(Agent):
     """An agent designed to execute a single task within a larger workflow."""
 
@@ -36,22 +37,23 @@ class AutonomousAgent(Agent):
 
     @classmethod
     def create_prompt(
-        cls,
-        tools: Sequence[BaseTool],
-        prefix: str = PREFIX,
-        suffix: str = SUFFIX,
-        format_instructions: str = FORMAT_INSTRUCTIONS,
-        ai_prefix: str = "AI",
-        human_prefix: str = "Human",
-        objective: Optional[str] = None,
-        input_variables: Optional[List[str]] = None,
+            cls,
+            tools: Sequence[BaseTool],
+            prefix: str = PREFIX,
+            suffix: str = SUFFIX,
+            format_instructions: str = FORMAT_INSTRUCTIONS,
+            ai_prefix: str = "AI",
+            human_prefix: str = "Human",
+            objective: Optional[str] = None,
+            input_variables: Optional[List[str]] = None,
     ) -> PromptTemplate:
         tool_strings = "\n".join(
             [f"> {tool.name}: {tool.description}" for tool in tools]
         )
         tool_names = ", ".join([tool.name for tool in tools])
         prefix = prefix.format(objective=objective)
-        format_instructions = format_instructions.format(tool_names=tool_names, ai_prefix=ai_prefix, human_prefix=human_prefix)
+        format_instructions = format_instructions.format(tool_names=tool_names, ai_prefix=ai_prefix,
+                                                         human_prefix=human_prefix)
         template = "\n\n".join([prefix, tool_strings, format_instructions, suffix])
         input_variables = ["input", "context", "agent_scratchpad"]
         return PromptTemplate(template=template, input_variables=input_variables)
@@ -69,18 +71,18 @@ class AutonomousAgent(Agent):
 
     @classmethod
     def from_llm_and_tools(
-        cls,
-        llm: BaseLLM,
-        tools: Sequence[BaseTool],
-        objective: Optional[str] = None,
-        callback_manager: Optional[BaseCallbackManager] = None,
-        prefix: str = PREFIX,
-        suffix: str = SUFFIX,
-        format_instructions: str = FORMAT_INSTRUCTIONS,
-        ai_prefix: str = "Jarvis",
-        human_prefix: str = "Human",
-        input_variables: Optional[List[str]] = None,
-        **kwargs: Any,
+            cls,
+            llm: BaseLLM,
+            tools: Sequence[BaseTool],
+            objective: Optional[str] = None,
+            callback_manager: Optional[BaseCallbackManager] = None,
+            prefix: str = PREFIX,
+            suffix: str = SUFFIX,
+            format_instructions: str = FORMAT_INSTRUCTIONS,
+            ai_prefix: str = "Jarvis",
+            human_prefix: str = "Human",
+            input_variables: Optional[List[str]] = None,
+            **kwargs: Any,
     ) -> "AutonomousAgent":
         """Construct an agent from an LLM and tools."""
         cls._validate_tools(tools)
@@ -97,7 +99,7 @@ class AutonomousAgent(Agent):
         llm_chain = LLMChain(
             llm=llm,
             prompt=prompt,
-            callback_manager=callback_manager, # type: ignore
+            callback_manager=callback_manager,  # type: ignore
         )
         tool_names = [tool.name for tool in tools]
         return cls(llm_chain=llm_chain, allowed_tools=tool_names, ai_prefix=ai_prefix, **kwargs)

@@ -1,4 +1,4 @@
-from typing import List, Dict 
+from typing import List, Dict
 from langchain import LLMChain, PromptTemplate
 from langchain.llms.base import BaseLLM
 
@@ -25,10 +25,11 @@ This is the information context generated so far:
 """
 
 reviewing_prompt = lambda objective: PromptTemplate(
-        template=reviewing_template,
-        partial_variables={"objective": objective},
-        input_variables=["completed_tasks", "pending_tasks", "context", "next_task_id"],
-        )
+    template=reviewing_template,
+    partial_variables={"objective": objective},
+    input_variables=["completed_tasks", "pending_tasks", "context", "next_task_id"],
+)
+
 
 class ReviewingChain(LLMChain):
 
@@ -36,8 +37,10 @@ class ReviewingChain(LLMChain):
     def from_llm(cls, llm: BaseLLM, objective: str, verbose: bool = True) -> "ReviewingChain":
         return cls(prompt=reviewing_prompt(objective), llm=llm, verbose=verbose)
 
-    def review_tasks(self, this_task_id: int, completed_tasks: List[str], pending_tasks: List[Dict], context: str) -> List[Dict]:
+    def review_tasks(self, this_task_id: int, completed_tasks: List[str], pending_tasks: List[Dict], context: str) -> \
+    List[Dict]:
         pending_tasks = [t["task_name"] for t in pending_tasks]
         next_task_id = int(this_task_id) + 1
-        response = self.run(completed_tasks=completed_tasks, pending_tasks=pending_tasks, context=context, next_task_id=next_task_id)
+        response = self.run(completed_tasks=completed_tasks, pending_tasks=pending_tasks, context=context,
+                            next_task_id=next_task_id)
         return parse_task_list(response)

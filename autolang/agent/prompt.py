@@ -20,7 +20,7 @@ FORMAT_INSTRUCTIONS = """
 Thought Process:
 ----------------
 
-Jarvis always uses the followin thought process and foramt to execute its tasks:
+Jarvis always uses the following thought process and format to execute its tasks:
 
 ```
 Thought: Do I need to use a tool? Yes

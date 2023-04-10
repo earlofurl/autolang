@@ -12,7 +12,7 @@ from .auto import AutoAgent
 
 objective = input('What is my purpose? ')
 
-llm: BaseLLM = ChatOpenAI(model_name="gpt-4", temperature=0, request_timeout=120) # type: ignore 
+llm: BaseLLM = ChatOpenAI(temperature=0, request_timeout=120) # type: ignore
 embeddings = OpenAIEmbeddings() # type: ignore
 
 """
@@ -26,7 +26,7 @@ tool_names = ["terminal", "requests", "python_repl", "human", "google-serper", "
 
 tools_names = ["python_repl", "human"]
 
-tools: List[Tool] = load_tools(tool_names, llm=llm)  # type: ignore
+tools: List[Tool] = load_tools(tools_names, llm=llm)  # type: ignore
 
 index = faiss.IndexFlatL2(1536)
 docstore = InMemoryDocstore({})
